@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, minimal-ui, viewport-fit=cover"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon32-af94112f.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon16-9e4401be.png"/>
+  <meta name="description" content="Shekhar Kumar — Full-Stack & Agentic AI Architect. Engineering autonomous multi-agent ecosystems, .NET enterprise architectures, and interactive 3D web systems."/>
+  <title>Shekhar Kumar // Full-Stack & Agentic AI Architect</title>
+  
+  <meta property="og:title" content="Shekhar Kumar // Full-Stack & Agentic AI Architect"/>
+  <meta property="og:description" content="Autonomous AI Systems, .NET 8 Enterprise Architecture, and 3D WebGL Environments."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="/assets/images/social.jpg"/>
+
+  <link rel="stylesheet" href="/assets/portfolio.css"/>
+  <script src="/assets/libs/three.min.js"></script>
+  <script src="/assets/libs/OrbitControls.js"></script>
+  <script type="module" crossorigin src="/assets/index-2e130bc1.js"></script>
+</head>
+<body>
+  <!-- Full-Screen Interactive 3D Glacial Citadel Stage Container -->
+  <div id="canvas3d-container"></div>
+
+  <!-- In-Scene 3D Hotspots Overlay (Jordan Breton 3D Projection) -->
+  <div id="hotspotsContainer" class="hotspots-overlay" aria-label="3D Project Viewpoints"></div>
+
+  <!-- Full-Screen Interactive Portfolio HUD Layer -->
+  <div class="hud-container" id="hud">
+
+    <!-- Onboarding Drag & Look Hint (Jordan Breton Inspiration) -->
+    <div class="look-around-hint show" id="lookAroundHint">
+      <div class="orbit-hand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" stroke-dasharray="3 3"/>
+          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+        </svg>
+      </div>
+      <span class="hint-text">TOUCH &amp; DRAG TO EXPLORE CITADEL</span>
+    </div>
+    
+    <!-- Top Navigation HUD -->
+    <header class="hud-header">
+      <div class="hud-brand">
+        <div class="brand-badge">
+          <span class="badge-icon">❄</span>
+          <span class="badge-code">SK-01</span>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-name">SHEKHAR KUMAR</h1>
+          <p class="brand-title">// FULL-STACK &amp; AGENTIC AI ARCHITECT</p>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span class="status-text">SYSTEM ONLINE</span>
+        </div>
+      </div>
+
+      <nav class="hud-nav" aria-label="Portfolio Navigation">
+        <button type="button" class="hud-btn" id="btnProjects" aria-haspopup="dialog">
+          <span class="btn-num">[01]</span>
+          <span class="btn-label">PROJECTS</span>
+        </button>
+        <button type="button" class="hud-btn" id="btnSkills" aria-haspopup="dialog">
+          <span class="btn-num">[02]</span>
+          <span class="btn-label">ARCHITECTURE</span>
+        </button>
+        <button type="button" class="hud-btn" id="btnPhilosophy" aria-haspopup="dialog">
+          <span class="btn-num">[03]</span>
+          <span class="btn-label">PHILOSOPHY</span>
+        </button>
+        <button type="button" class="hud-btn" id="btnContact" aria-haspopup="dialog">
+          <span class="btn-num">[04]</span>
+          <span class="btn-label">CONNECT</span>
+        </button>
+        <button type="button" class="hud-btn hud-btn-audio" id="btnSoundToggle" aria-label="Toggle Spatial Audio">
+          <span class="audio-wave">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span id="audioLabel">AUDIO: MUTED</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- 3D Stage Selector Bar -->
+    <div class="stage-selector-bar" role="toolbar" aria-label="3D Project Stages">
+      <span class="stage-cue">3D STAGES:</span>
+      <button type="button" class="stage-pill active" data-stage="citadel">[00] PANORAMA</button>
+      <button type="button" class="stage-pill" data-stage="agentic">[01] AGENTIC REACTOR</button>
+      <button type="button" class="stage-pill" data-stage="dotnet">[02] .NET 8 MONOLITH</button>
+      <button type="button" class="stage-pill" data-stage="floorplan">[03] SHARP DARWIN (3D VASTU)</button>
+      <button type="button" class="stage-pill" data-stage="codex">[04] LEGAL AI CODEX (LL)</button>
+      <button type="button" class="stage-pill" data-stage="guardrail">[05] QUANTUM GUARDRAIL</button>
+      <button type="button" class="stage-pill game-pill" id="btnGameMode" data-stage="fps" title="First-Person Game Mode (Key: C or G)">🎮 PLAY [1ST PERSON]</button>
+    </div>
+
+    <!-- Game Mode HUD Overlay (First-Person Crosshair, Compass & Telemetry) -->
+    <div class="game-hud-overlay" id="gameHudOverlay">
+      <!-- Reticle -->
+      <div class="game-reticle">
+        <div class="reticle-dot"></div>
+        <div class="reticle-ring"></div>
+      </div>
+
+      <!-- Top Compass Tape -->
+      <div class="game-compass-tape">
+        <div class="compass-marker">▼</div>
+        <div class="compass-readout" id="compassReadout">000° N // HIMALAYAS</div>
+      </div>
+
+      <!-- Bottom-Left Stamina & Velocity -->
+      <div class="game-player-stats">
+        <div class="stat-line">
+          <span class="stat-tag">STAMINA</span>
+          <div class="stamina-track">
+            <div class="stamina-fill" id="staminaFill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="stat-sub">
+          <span class="speed-indicator" id="speedIndicator">0.0 M/S [IDLE]</span>
+          <button type="button" class="pov-badge-btn" id="btnPovToggle" title="Toggle 1st/3rd Person POV (Key: V)">
+            <span id="povLabel">POV: 1ST PERSON</span>
+            <span class="pov-hint">[V]</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Interactive Monument Proximity Prompt -->
+      <div class="game-proximity-prompt" id="gameProximityPrompt" style="display: none;">
+        <button type="button" class="proximity-pill" id="btnProximityInspect">
+          <kbd class="key-e">E</kbd>
+          <span class="prompt-text" id="proximityText">EXAMINE MONUMENT</span>
+        </button>
+      </div>
+
+      <!-- Bottom Keybindings Quick Bar -->
+      <div class="game-controls-hint">
+        <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> MOVE</span>
+        <span><kbd>SHIFT</kbd> SPRINT</span>
+        <span><kbd>SPACE</kbd> JUMP</span>
+        <span><kbd>V</kbd> 1ST/3RD POV</span>
+        <span><kbd>E</kbd> EXAMINE</span>
+        <span><kbd>CLICK</kbd> MOUSE LOOK</span>
+        <span><kbd>ESC</kbd> UNLOCK</span>
+      </div>
+    </div>
+
+    <!-- Monument 3D Telemetry HUD (Bottom-Right) -->
+    <aside class="hud-monument-telemetry" id="monumentTelemetry" aria-label="Selected 3D Project Details">
+      <div class="monument-badge-row">
+        <span class="monument-code" id="monumentCode">PANORAMA // 5 ENTERPRISE MONUMENTS</span>
+        <button type="button" class="btn-explode" id="btnExplode" title="Toggle exploded architectural view">
+          <span class="explode-icon">⚡</span>
+          <span id="explodeLabel">EXPLODE VIEW</span>
+        </button>
+      </div>
+      <h2 class="monument-title" id="monumentTitle">THE GLACIAL DATA CITADEL</h2>
+      <p class="monument-desc" id="monumentDesc">An interconnected spatial landscape representing Shekhar Kumar's software architecture, from autonomous multi-agent reasoning to .NET 8 enterprise design patterns.</p>
+      <div class="monument-tech-tags" id="monumentTech">
+        <span>WebGL</span><span>Three.js</span><span>GLSL Shaders</span><span>Draco</span><span>KTX2</span>
+      </div>
+      <div class="monument-actions">
+        <a href="https://github.com/Shekhar938" target="_blank" rel="noopener noreferrer" class="monument-btn primary" id="monumentRepoBtn">
+          <span>VIEW REPOSITORY</span>
+          <span class="btn-arrow">➔</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Left Telemetry Sidebar -->
+    <aside class="hud-sidebar-left">
+      <div class="telemetry-box">
+        <div class="telemetry-line"><span class="t-label">ENV</span><span class="t-val">3D_FROST_CANVAS</span></div>
+        <div class="telemetry-line"><span class="t-label">FPS</span><span class="t-val" id="fpsCounter">60</span></div>
+        <div class="telemetry-line"><span class="t-label">LOCATION</span><span class="t-val">INDIA (IST)</span></div>
+        <div class="telemetry-line"><span class="t-label">STACK</span><span class="t-val">AI / .NET / 3D</span></div>
+      </div>
+      <div class="quick-socials">
+        <a href="https://github.com/Shekhar938" target="_blank" rel="noopener noreferrer" class="social-chip" title="GitHub Profile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GITHUB</span>
+        </a>
+        <a href="https://www.linkedin.com/in/shekhar-kr/" target="_blank" rel="noopener noreferrer" class="social-chip" title="LinkedIn Profile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          <span>LINKEDIN</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Jordan Breton Inspired UI Stack: Celestial Day/Night, Discovery Tracker & Auto-Tour -->
+    <aside class="ui-stack" aria-label="Celestial &amp; Discovery Controls">
+      <!-- Day / Night Celestial Switch -->
+      <div class="switch" id="dayNightSwitch" role="button" tabindex="0" title="Toggle Day / Night Celestial Atmosphere" aria-label="Toggle Celestial Atmosphere">
+        <div class="stars">
+          <span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span>
+        </div>
+        <div class="clouds">
+          <span class="cloud"></span><span class="cloud"></span>
+        </div>
+        <div class="switch-handle">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="5" fill="#f59e0b"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#93c5fd" stroke="#60a5fa" stroke-width="1"/>
+            <circle cx="16" cy="7" r="1" fill="#ffffff"/>
+            <circle cx="14" cy="10" r="0.6" fill="#ffffff"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Crystalline Discovery Tracker -->
+      <div class="crystal-progress" id="crystalProgress" title="Discovered Project Viewpoints">
+        <span class="crystal-icon">💎</span>
+        <span class="crystal-text"><span id="crystalCount">0</span> / 5 DISCOVERED</span>
+      </div>
+
+      <!-- Guided Auto-Tour Mode -->
+      <button type="button" class="tour-button" id="btnTourToggle" title="Auto Guided Cinematic Tour (Key: T)">
+        <svg class="tour-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
+        </svg>
+        <span class="tour-text" id="tourLabel">AUTO TOUR</span>
+      </button>
+
+      <!-- Contemplative Spirit Mode -->
+      <button type="button" class="spirit-button" id="btnSpiritToggle" title="Contemplative Himalayan Spirit Realm (Key: M)">
+        <span class="spirit-icon">✨</span>
+        <span class="spirit-text" id="spiritLabel">SPIRIT REALM</span>
+      </button>
+    </aside>
+
+    <!-- Bottom Navigation & Coordinates HUD -->
+    <footer class="hud-footer">
+      <div class="hud-footer-left">
+        <div class="author-signature">
+          <span class="author-name">SHEKHAR KUMAR</span>
+          <span class="author-sub">AI SYSTEMS ARCHITECT</span>
+        </div>
+        <div class="telemetry-coord-pill">
+          <span class="coord-tag">COORDS:</span>
+          <span class="coord-val" id="telemetryCoords">X: 0.00 | Y: -0.45 | Z: 12.80</span>
+        </div>
+      </div>
+      <div class="hud-footer-center">
+        <div class="scroll-cue">
+          <span class="scroll-arrow">↓</span>
+          <span class="scroll-text">SCROLL TO TRAVERSE 3D LANDSCAPE &amp; DISCOVER VENTURES</span>
+        </div>
+      </div>
+      <div class="hud-footer-right">
+        <button type="button" class="cube-jump-btn" id="jumpCube1" title="Jump to AgenticFramework in 3D">
+          <span>01. AGENTIC AI</span>
+        </button>
+        <button type="button" class="cube-jump-btn" id="jumpCube2" title="Jump to .NET 8 Patterns in 3D">
+          <span>02. .NET 8</span>
+        </button>
+        <button type="button" class="cube-jump-btn" id="jumpCube3" title="Jump to 3D Vastu Designer (sharp-darwin) in 3D">
+          <span>03. SHARP DARWIN</span>
+        </button>
+        <button type="button" class="cube-jump-btn" id="jumpCube4" title="Jump to Legal Intelligence Platform (ll) in 3D">
+          <span>04. LEGAL AI (LL)</span>
+        </button>
+        <button type="button" class="cube-jump-btn" id="jumpCube5" title="Jump to Quantum Guardrails in 3D">
+          <span>05. GUARDRAILS</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL: Projects Gallery -->
+  <dialog id="projectsDialog" class="portfolio-dialog" closedby="any" aria-labelledby="projectsTitle">
+    <div class="dialog-inner">
+      <header class="dialog-header">
+        <div>
+          <span class="dialog-badge">////// REPOSITORY ARCHIVE</span>
+          <h2 id="projectsTitle" class="dialog-title">FEATURED PROJECTS &amp; CODEBASES</h2>
+        </div>
+        <button type="button" class="dialog-close-btn" data-close-dialog="projectsDialog" aria-label="Close dialog">✕</button>
+      </header>
+
+      <!-- Filter Controls -->
+      <div class="filter-bar">
+        <button type="button" class="filter-chip active" data-filter="all">ALL PROJECTS [6]</button>
+        <button type="button" class="filter-chip" data-filter="ai">AGENTIC AI &amp; LLMS</button>
+        <button type="button" class="filter-chip" data-filter="dotnet">ENTERPRISE .NET</button>
+        <button type="button" class="filter-chip" data-filter="web3d">FULL-STACK &amp; 3D</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid">
+        
+        <!-- Project 1 -->
+        <article class="project-card" data-category="ai">
+          <div class="project-card-header">
+            <span class="project-num">PR_01</span>
+            <span class="project-tag">AGENTIC AI</span>
+          </div>
+          <h3 class="project-name">AgenticFramework</h3>
+          <p class="project-lead">Autonomous AI Ecosystem built with Semantic Kernel &amp; Model Context Protocol (MCP)</p>
+          <p class="project-desc">A full architectural blueprint transitioning software from imperative scripts to goal-oriented intent. Features autonomous tool sequencing, emergent problem solving, dynamic parameterization, and self-healing reasoning loops.</p>
+          <div class="project-tech">
+            <span>Semantic Kernel</span><span>MCP</span><span>Python</span><span>Multi-Agent</span><span>Tool Orchestration</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/AgenticFramework" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card" data-category="dotnet">
+          <div class="project-card-header">
+            <span class="project-num">PR_02</span>
+            <span class="project-tag">ENTERPRISE .NET</span>
+          </div>
+          <h3 class="project-name">.NET 8 Design Patterns Playground</h3>
+          <p class="project-lead">Production-ready GoF Creational, Structural &amp; Behavioral Patterns in modern C# 12</p>
+          <p class="project-desc">A deep architectural exploration of clean architecture, dependency injection, and microservices patterns in .NET 8. Implements real-world use cases for Singleton, Factory, Builder, Adapter, Decorator, Strategy, Observer, and Command patterns.</p>
+          <div class="project-tech">
+            <span>C# 12</span><span>.NET 8</span><span>GoF Patterns</span><span>Clean Architecture</span><span>SOLID</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/dotnet-design-patterns-playground" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card" data-category="web3d">
+          <div class="project-card-header">
+            <span class="project-num">PR_03</span>
+            <span class="project-tag">FULL-STACK &amp; AI</span>
+          </div>
+          <h3 class="project-name">Legal Intelligence Platform (ll)</h3>
+          <p class="project-lead">Next.js 16 + React 19 + Google Gemini 2.5 + Vercel Postgres</p>
+          <p class="project-desc">A modern, responsive legal advisory platform integrating Gemini API multimodal models (@google/genai) for real-time document analysis, consultation scheduling, client portal access, and case lifecycle management.</p>
+          <div class="project-tech">
+            <span>Next.js 16</span><span>React 19</span><span>Google Gemini API</span><span>Vercel Postgres</span><span>TypeScript</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/ll" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 4 -->
+        <article class="project-card" data-category="web3d">
+          <div class="project-card-header">
+            <span class="project-num">PR_04</span>
+            <span class="project-tag">3D &amp; SPATIAL</span>
+          </div>
+          <h3 class="project-name">3D Vastu Floor Plan Designer</h3>
+          <p class="project-lead">Interactive 2D/3D Architectural Visualizer &amp; Geometric Engine</p>
+          <p class="project-desc">A spatial computing application allowing users to generate, edit, and analyze 2D/3D architectural floor plans with real-time Vastu compliance orientation analytics, dynamic room sizing, and WebGL rendering.</p>
+          <div class="project-tech">
+            <span>WebGL</span><span>Three.js</span><span>TypeScript</span><span>Spatial UI</span><span>HTML5 Canvas</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/sharp-darwin" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 5 -->
+        <article class="project-card" data-category="ai">
+          <div class="project-card-header">
+            <span class="project-num">PR_05</span>
+            <span class="project-tag">AI RESEARCH</span>
+          </div>
+          <h3 class="project-name">LLM System Prompts &amp; Safety Guardrails</h3>
+          <p class="project-lead">Architectural Analysis of Production Model Directives &amp; Reasoning Policies</p>
+          <p class="project-desc">Empirical analysis and catalog of system prompts, policy guardrails, and tool invocation specifications across top-tier foundation models and coding agents (Claude Code, Gemini Pro, GPT-5, Cursor, Perplexity).</p>
+          <div class="project-tech">
+            <span>Prompt Architecture</span><span>Safety Guardrails</span><span>Policy Design</span><span>Agentic Workflows</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/system_prompts_leaks" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 6 -->
+        <article class="project-card" data-category="dotnet">
+          <div class="project-card-header">
+            <span class="project-num">PR_06</span>
+            <span class="project-tag">ALGORITHMS &amp; SYSTEMS</span>
+          </div>
+          <h3 class="project-name">Data Structures &amp; Systems Algorithms</h3>
+          <p class="project-lead">High-Performance Algorithmic Implementations &amp; Concurrency</p>
+          <p class="project-desc">A structured engineering repository of optimal graph algorithms, dynamic programming solutions, memory allocation patterns, and lock-free concurrency primitives in TypeScript and C#.</p>
+          <div class="project-tech">
+            <span>TypeScript</span><span>C#</span><span>Graph Algorithms</span><span>Dynamic Programming</span><span>Complexity</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/Shekhar938/DSA" target="_blank" rel="noopener noreferrer" class="proj-link primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>VIEW REPO</span>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: Technical Architecture & Skills -->
+  <dialog id="skillsDialog" class="portfolio-dialog" closedby="any" aria-labelledby="skillsTitle">
+    <div class="dialog-inner">
+      <header class="dialog-header">
+        <div>
+          <span class="dialog-badge">////// COMPETENCY MATRIX</span>
+          <h2 id="skillsTitle" class="dialog-title">TECHNICAL ARCHITECTURE &amp; CAPABILITIES</h2>
+        </div>
+        <button type="button" class="dialog-close-btn" data-close-dialog="skillsDialog" aria-label="Close dialog">✕</button>
+      </header>
+
+      <div class="skills-grid">
+        
+        <div class="skill-category-card">
+          <div class="skill-cat-header">
+            <span class="skill-icon">🧠</span>
+            <h3>AGENTIC AI &amp; AUTONOMOUS SYSTEMS</h3>
+          </div>
+          <ul class="skill-list">
+            <li><strong>Frameworks:</strong> Semantic Kernel, Model Context Protocol (MCP), LangChain</li>
+            <li><strong>AI Engineering:</strong> Tool Orchestration, Reasoning Loops, Multi-Agent Collaboration</li>
+            <li><strong>Inference &amp; SDKs:</strong> Google Gemini API, OpenAI Assistants API, Claude Tool Calling</li>
+            <li><strong>Techniques:</strong> Dynamic Planning, Self-Healing Code, RAG, Structured Output</li>
+          </ul>
+        </div>
+
+        <div class="skill-category-card">
+          <div class="skill-cat-header">
+            <span class="skill-icon">⚡</span>
+            <h3>BACKEND &amp; ENTERPRISE SYSTEMS</h3>
+          </div>
+          <ul class="skill-list">
+            <li><strong>Languages &amp; Runtimes:</strong> C# 12, .NET 8, ASP.NET Core, Node.js, Python</li>
+            <li><strong>Architecture:</strong> Clean Architecture, Domain-Driven Design (DDD), Microservices</li>
+            <li><strong>Design Patterns:</strong> GoF Creational/Structural/Behavioral, CQRS, Event-Driven</li>
+            <li><strong>Databases:</strong> PostgreSQL, SQL Server, Redis, Vercel Postgres, SQLite</li>
+          </ul>
+        </div>
+
+        <div class="skill-category-card">
+          <div class="skill-cat-header">
+            <span class="skill-icon">🌐</span>
+            <h3>MODERN WEB &amp; 3D EXPERIENCES</h3>
+          </div>
+          <ul class="skill-list">
+            <li><strong>Web Frameworks:</strong> Next.js 16, React 19, TypeScript, Svelte, Vite</li>
+            <li><strong>3D &amp; Graphics:</strong> WebGL, Three.js, Custom GLSL Shaders, Postprocessing</li>
+            <li><strong>Optimization:</strong> Draco 3D Compression, KTX2 / Basis Universal Textures, MSDF Fonts</li>
+            <li><strong>Styling &amp; UX:</strong> Modern CSS, Glassmorphism, Micro-interactions, Accessible Dialogs</li>
+          </ul>
+        </div>
+
+        <div class="skill-category-card">
+          <div class="skill-cat-header">
+            <span class="skill-icon">🛠️</span>
+            <h3>ENGINEERING OPERATIONS &amp; TOOLS</h3>
+          </div>
+          <ul class="skill-list">
+            <li><strong>DevOps &amp; Cloud:</strong> Docker, Git / GitHub Workflows, Vercel, Linux / Bash</li>
+            <li><strong>Security &amp; Protocols:</strong> MCP Bridges, CORS/COOP/COEP Policies, Auth Flows</li>
+            <li><strong>Testing &amp; QA:</strong> Unit Testing, Integration Testing, Headless Browser Automation</li>
+            <li><strong>Observability:</strong> Structured Logging, Telemetry, Performance Profiling</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: Philosophy & Manifesto -->
+  <dialog id="philosophyDialog" class="portfolio-dialog" closedby="any" aria-labelledby="philosophyTitle">
+    <div class="dialog-inner">
+      <header class="dialog-header">
+        <div>
+          <span class="dialog-badge">////// ENGINEERING MINDSET</span>
+          <h2 id="philosophyTitle" class="dialog-title">ENGINEERING AUTONOMOUS ENTERPRISE SYSTEMS</h2>
+        </div>
+        <button type="button" class="dialog-close-btn" data-close-dialog="philosophyDialog" aria-label="Close dialog">✕</button>
+      </header>
+
+      <div class="philosophy-content">
+        <blockquote class="manifesto-quote">
+          “Building an agent isn't just about the LLM; it's about the <strong>Policy</strong> that governs how it uses tools. Conventional software breaks at ambiguity—intelligent systems use <strong>closed-loop reasoning</strong> to navigate non-deterministic environments.”
+        </blockquote>
+
+        <div class="philosophy-principles">
+          <div class="principle-item">
+            <h4>01. Beyond Imperative Coding</h4>
+            <p>Moving from sequential scripts to goal-oriented intent. We define verifiable tools and boundaries; the agent dynamically synthesizes execution paths based on real-time state feedback.</p>
+          </div>
+
+          <div class="principle-item">
+            <h4>02. Closed-Loop Execution &amp; Self-Healing</h4>
+            <p>An autonomous system must inspect its own execution outputs, catch errors at runtime, and replan alternatives without requiring manual human intervention.</p>
+          </div>
+
+          <div class="principle-item">
+            <h4>03. Enterprise Craftsmanship &amp; Architectural Rigor</h4>
+            <p>AI without solid foundations is brittle. Combining classic SOLID principles, .NET 8 robustness, and clean decoupled interfaces creates scalable, production-grade intelligent platforms.</p>
+          </div>
+        </div>
+
+        <div class="author-signature">
+          <span>// SHEKHAR KUMAR</span>
+          <span class="sig-title">Full-Stack &amp; Agentic AI Architect</span>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: Connect / Contact -->
+  <dialog id="contactDialog" class="portfolio-dialog" closedby="any" aria-labelledby="contactTitle">
+    <div class="dialog-inner">
+      <header class="dialog-header">
+        <div>
+          <span class="dialog-badge">////// COMMUNICATION CHANNELS</span>
+          <h2 id="contactTitle" class="dialog-title">CONNECT WITH SHEKHAR KUMAR</h2>
+        </div>
+        <button type="button" class="dialog-close-btn" data-close-dialog="contactDialog" aria-label="Close dialog">✕</button>
+      </header>
+
+      <div class="contact-grid">
+        
+        <a href="https://www.linkedin.com/in/shekhar-kr/" target="_blank" rel="noopener noreferrer" class="contact-card">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </div>
+          <div class="contact-details">
+            <span class="contact-label">LINKEDIN PROFILE</span>
+            <span class="contact-val">linkedin.com/in/shekhar-kr</span>
+            <span class="contact-sub">Professional network, recommendations &amp; engineering updates</span>
+          </div>
+          <span class="contact-arrow">➔</span>
+        </a>
+
+        <a href="https://github.com/Shekhar938" target="_blank" rel="noopener noreferrer" class="contact-card">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div class="contact-details">
+            <span class="contact-label">GITHUB REPOSITORIES</span>
+            <span class="contact-val">github.com/Shekhar938</span>
+            <span class="contact-sub">30+ repositories in Agentic AI, .NET, Full-Stack &amp; Systems</span>
+          </div>
+          <span class="contact-arrow">➔</span>
+        </a>
+
+        <div class="contact-card copy-email-card" id="copyEmailCard">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="contact-details">
+            <span class="contact-label">DIRECT INQUIRIES</span>
+            <span class="contact-val">shekhar.dev938@gmail.com</span>
+            <span class="contact-sub" id="copyStatusText">Click to copy email address</span>
+          </div>
+          <button type="button" class="btn-copy" id="btnCopyEmail">COPY</button>
+        </div>
+
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Interactive HUD Script -->
+  <script type="module" src="/assets/portfolio-hud.js"></script>
+
+</body>
+</html>

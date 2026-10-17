@@ -1,0 +1,20 @@
+{
+  "name": "igloo-inc-clone",
+  "version": "1.0.0",
+  "description": "Full interactive 3D WebGL clone of Igloo Inc. (https://www.igloo.inc/)",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "serve": "node server.mjs"
+  },
+  "keywords": [
+    "igloo",
+    "webgl",
+    "threejs",
+    "svelte",
+    "interactive-3d",
+    "awwwards"
+  ],
+  "author": "",
+  "license": "MIT"
+}
